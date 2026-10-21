@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustLink — Secure Transactions</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+  :root { 
+    --primary: #0f766e; 
+    --primary-dark: #115e59;
+    --bg: #f8fafc; 
+    --text: #0f172a; 
+    --border: #e2e8f0;
+  }
+  body { 
+    margin: 0; padding: 0; background-color: var(--bg); 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    color: var(--text); display: flex; justify-content: center; min-height: 100vh; 
+  }
+  .app-container { width: 100%; max-width: 420px; padding: 20px; box-sizing: border-box; }
+  
+  /* AUTH SCREENS */
+  .auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; justify-content: center; padding: 30px; box-sizing: border-box; }
+  .auth-screen.hidden { display: none; }
+  .auth-logo { text-align: center; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; letter-spacing: -0.5px; }
+  .auth-tagline { text-align: center; font-size: 14px; color: #64748b; margin-bottom: 35px; }
+  .auth-form { display: flex; flex-direction: column; max-width: 350px; margin: 0 auto; width: 100%; }
+  .auth-form input { padding: 15px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; font-size: 15px; outline: none; background: #ffffff; transition: border 0.2s; }
+  .auth-form input:focus { border-color: var(--primary); }
+  .auth-btn { background: var(--primary); color: white; padding: 16px; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: background 0.2s; }
+  .auth-btn:hover { background: var(--primary-dark); }
+  .toggle-auth { text-align: center; font-size: 14px; color: var(--primary); margin-top: 24px; cursor: pointer; font-weight: 500; }
+
+  /* MAIN APP */
+  .app-screen { display: none; width: 100%; }
+  .app-screen.active { display: block; }
+  .header { text-align: center; margin-bottom: 24px; margin-top: 20px; }
+  .header h1 { color: var(--text); margin: 0 0 6px 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+  .header p { color: #64748b; font-size: 14px; margin: 0; }
+  .logout-btn { background: none; border: none; color: #ef4444; font-weight: 600; font-size: 14px; cursor: pointer; position: absolute; top: 24px; right: 24px; }
+
+  .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 24px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+  .form-group input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; background: #ffffff; transition: border 0.2s; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; display: block; box-sizing: border-box; transition: background 0.2s; }
+  .btn:hover { background: var(--primary-dark); }
+  
+  .order-item { border-bottom: 1px solid var(--border); padding: 16px 0; display: flex; justify-content: space-between; align-items: center; }
+  .order-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .order-info h4 { margin: 0 0 6px 0; font-size: 15px; color: var(--text); font-weight: 600; }
+  .order-info p { margin: 0; font-size: 14px; color: #64748b; }
+  
+  .status-badge { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; }
+  .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+  .status-completed { background: #f0fdf4; color: #15803d; border: 1px solid #86efac; }
+
+  /* BUYER RECEIPT SCREEN */
+  .receipt-card { border: 1px solid var(--border); border-radius: 12px; padding: 32px 24px; text-align: center; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+  
+  /* Clean CSS Checkmark */
+  .css-checkmark { width: 56px; height: 56px; border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; stroke-miterlimit: 10; margin: 0 auto 20px auto; box-shadow: inset 0px 0px 0px var(--primary); }
+  .css-checkmark-circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: var(--primary); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+  .css-checkmark-check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
+  @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+
+  .receipt-status { color: var(--text); font-weight: 700; font-size: 20px; margin-bottom: 8px; }
+  .receipt-item { font-size: 18px; font-weight: 500; color: #475569; margin: 8px 0; }
+  .receipt-price { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 24px; letter-spacing: -0.5px; }
+  .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; color: #475569; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
+  .receipt-details strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ================= AUTH SCREEN ================= -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-logo">TrustLink</div>
+  <div class="auth-tagline">Secure transactions for social commerce</div>
+  
+  <div class="auth-form" id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email address">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button class="auth-btn" onclick="handleLogin()">Sign In</button>
+    <div class="toggle-auth" onclick="toggleAuth('signup')">Create a business account</div>
+  </div>
+
+  <div class="auth-form" id="signupForm" style="display:none;">
+    <input type="text" id="signupName" placeholder="Business or Full Name">
+    <input type="email" id="signupEmail" placeholder="Email address">
+    <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
+    <button class="auth-btn" onclick="handleSignup()">Create Account</button>
+    <div class="toggle-auth" onclick="toggleAuth('login')">Already have an account? Sign In</div>
+  </div>
+</div>
+
+<!-- ================= SELLER DASHBOARD ================= -->
+<div class="app-screen" id="sellerDashboard">
+  <button class="logout-btn" onclick="logout()">Sign Out</button>
+  
+  <div class="header" style="margin-top: 40px;">
+    <h1>Dashboard</h1>
+    <p id="welcomeText">Manage your secure links</p>
+  </div>
+
+  <!-- CREATE ORDER FORM -->
+  <div class="card">
+    <h3 style="margin-top:0; font-size:16px; font-weight:600; margin-bottom: 20px;">Generate New Link</h3>
+    <div class="form-group">
+      <label>Item Description</label>
+      <input type="text" id="itemName" placeholder="e.g. iPhone 13 Pro">
+    </div>
+    <div class="form-group">
+      <label>Price (NGN)</label>
+      <input type="number" id="itemPrice" placeholder="e.g. 350000">
+    </div>
+    <button class="btn" onclick="createOrder()">Generate Secure Link</button>
+  </div>
+
+  <!-- ORDER HISTORY -->
+  <div class="card">
+    <h3 style="margin-top:0; font-size:16px; font-weight:600; margin-bottom: 20px;">Recent Transactions</h3>
+    <div id="ordersList">
+      <p style="font-size:14px; color:#64748b; text-align:center;">Loading transactions...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= BUYER RECEIPT VIEW ================= -->
+<div class="app-screen" id="buyerView">
+  <div class="header" style="margin-top: 40px;">
+    <h1>Order Details</h1>
+    <p>Powered by TrustLink</p>
+  </div>
+
+  <div class="receipt-card" id="receiptCard">
+    
+    <!-- SVG Checkmark (Clean, No Emojis) -->
+    <svg class="css-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="css-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="css-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+
+    <div class="receipt-status" id="receiptStatus">Awaiting Confirmation</div>
+    <div class="receipt-item" id="showItem">-</div>
+    <div class="receipt-price" id="showPrice">₦0</div>
+    
+    <div class="receipt-details">
+      <strong>Seller:</strong> <span id="showSeller">-</span><br><br>
+      <span id="statusText">By clicking "Confirm Delivery", you state that you have received this item in the condition agreed upon.</span>
+    </div>
+
+    <div id="buyerActions">
+      <button class="btn" onclick="confirmDelivery()">Confirm Delivery</button>
+    </div>
+
+    <div id="successMessage" style="display: none;">
+      <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
+      <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 🔥 YOUR FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyD6nF-6PRO-TZOVrsIGBxRXGeFGVKfLkmQ",
+    authDomain: "voxpop-1c6c4.firebaseapp.com",
+    projectId: "voxpop-1c6c4",
+    storageBucket: "voxpop-1c6c4.firebasestorage.app",
+    messagingSenderId: "839233642124",
+    appId: "1:839233642124:web:c7dd76816a808fc2e6e5a9"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let currentUser = null;
+  let currentOrderId = null;
+
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order');
+    
+    if (orderId) {
+      currentOrderId = orderId;
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('sellerDashboard').classList.remove('active');
+      document.getElementById('buyerView').classList.add('active');
+      loadBuyerOrder(orderId);
+    }
+  };
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      if (!currentOrderId) {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('sellerDashboard').classList.add('active');
+        document.getElementById('welcomeText').textContent = "Welcome, " + (user.displayName || "Seller");
+        loadSellerOrders();
+      }
+    } else {
+      currentUser = null;
+      if (!currentOrderId) {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('sellerDashboard').classList.remove('active');
+      }
+    }
+  });
+
+  function toggleAuth(type) {
+    document.getElementById('loginForm').style.display = type === 'login' ? 'flex' : 'none';
+    document.getElementById('signupForm').style.display = type === 'signup' ? 'flex' : 'none';
+  }
+
+  async function handleSignup() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const pass = document.getElementById('signupPassword').value.trim();
+    if(!name || !email || !pass) return alert("Please fill all fields");
+    try {
+      const res = await auth.createUserWithEmailAndPassword(email, pass);
+      await res.user.updateProfile({ displayName: name });
+    } catch(e) { alert(e.message); }
+  }
+
+  async function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value.trim();
+    if(!email || !pass) return alert("Please fill all fields");
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+    } catch(e) { alert(e.message); }
+  }
+
+  function logout() { auth.signOut(); }
+
+  async function createOrder() {
+    const item = document.getElementById('itemName').value.trim();
+    const price = document.getElementById('itemPrice').value.trim();
+    if(!item || !price) return alert("Please fill all fields");
+
+    try {
+      const docRef = await db.collection('orders').add({
+        sellerId: currentUser.uid,
+        sellerName: currentUser.displayName || "Seller",
+        item: item,
+        price: price,
+        status: 'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      const baseUrl = window.location.origin + window.location.pathname;
+      const fullLink = baseUrl + `?order=${docRef.id}`;
+
+      await navigator.clipboard.writeText(fullLink);
+      alert("Link generated and copied. Send it to your buyer:\n\n" + fullLink);
+      
+      document.getElementById('itemName').value = "";
+      document.getElementById('itemPrice').value = "";
+      
+    } catch(e) { alert(e.message); }
+  }
+
+  function loadSellerOrders() {
+    db.collection('orders')
+      .where('sellerId', '==', currentUser.uid)
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snapshot => {
+        const list = document.getElementById('ordersList');
+        list.innerHTML = "";
+        
+        if (snapshot.empty) {
+          list.innerHTML = '<p style="font-size:14px; color:#64748b; text-align:center;">No transactions yet.</p>';
+          return;
+        }
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const isCompleted = data.status === 'completed';
+          
+          list.innerHTML += `
+            <div class="order-item">
+              <div class="order-info">
+                <h4>${data.item}</h4>
+                <p>₦${parseInt(data.price).toLocaleString()}</p>
+              </div>
+              <div class="status-badge ${isCompleted ? 'status-completed' : 'status-pending'}">
+                ${isCompleted ? 'Completed' : 'Pending'}
+              </div>
+            </div>
+          `;
+        });
+      });
+  }
+
+  async function loadBuyerOrder(orderId) {
+    try {
+      const doc = await db.collection('orders').doc(orderId).get();
+      if (!doc.exists) {
+        alert("Order not found"); return;
+      }
+      
+      const data = doc.data();
+      document.getElementById('showSeller').textContent = data.sellerName;
+      document.getElementById('showItem').textContent = data.item;
+      document.getElementById('showPrice').textContent = "₦" + parseInt(data.price).toLocaleString();
+
+      if (data.status === 'completed') {
+        document.getElementById('buyerActions').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
+        document.getElementById('statusText').textContent = "Transaction completed successfully.";
+      }
+    } catch(e) { alert(e.message); }
+  }
+
+  async function confirmDelivery() {
+    if(!currentOrderId) return;
+    try {
+      await db.collection('orders').doc(currentOrderId).update({ status: 'completed' });
+      
+      document.getElementById('buyerActions').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'block';
+      document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
+      document.getElementById('statusText').textContent = "Transaction completed successfully.";
+    } catch(e) { alert(e.message); }
+  }
+</script>
+</body>
+</html>
