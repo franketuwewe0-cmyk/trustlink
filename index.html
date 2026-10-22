@@ -166,7 +166,7 @@
 </div>
 
 <script>
-  // 🔥 YOUR FIREBASE CONFIG
+  // YOUR FIREBASE CONFIG
   const firebaseConfig = {
     apiKey: "AIzaSyD6nF-6PRO-TZOVrsIGBxRXGeFGVKfLkmQ",
     authDomain: "voxpop-1c6c4.firebaseapp.com",
@@ -201,7 +201,6 @@
       if (!currentOrderId) {
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('sellerDashboard').classList.add('active');
-        // Fallback to email prefix if display name is missing
         const name = user.displayName || user.email.split('@')[0] || "Seller";
         document.getElementById('welcomeText').textContent = "Welcome, " + name;
         loadSellerOrders();
@@ -228,7 +227,7 @@
     try {
       const res = await auth.createUserWithEmailAndPassword(email, pass);
       await res.user.updateProfile({ displayName: name });
-      window.location.reload(); // Reload to grab the new display name
+      window.location.reload();
     } catch(e) { alert(e.message); }
   }
 
@@ -263,8 +262,34 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const fullLink = baseUrl + `?order=${docRef.id}`;
 
-      await navigator.clipboard.writeText(fullLink);
-      alert("Link generated and copied. Send it to your buyer:\n\n" + fullLink);
+      // --- CLIPBOARD FIX ---
+      let copied = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(fullLink);
+          copied = true;
+        } catch (err) {
+          console.log("Modern clipboard failed, trying fallback...");
+        }
+      }
+      if (!copied) {
+        const textArea = document.createElement("textarea");
+        textArea.value = fullLink;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try { copied = document.execCommand('copy'); } catch (err) {}
+        document.body.removeChild(textArea);
+      }
+      
+      if (copied) {
+        alert("Link generated and copied. Send it to your buyer:\n\n" + fullLink);
+      } else {
+        prompt("Could not auto-copy. Please copy this link manually:", fullLink);
+      }
       
       document.getElementById('itemName').value = "";
       document.getElementById('itemPrice').value = "";
@@ -273,7 +298,6 @@
   }
 
   function loadSellerOrders() {
-    // Removed .orderBy() to avoid Firebase Composite Index error
     db.collection('orders')
       .where('sellerId', '==', currentUser.uid)
       .onSnapshot(snapshot => {
@@ -290,7 +314,6 @@
           orders.push({ id: doc.id, ...doc.data() });
         });
 
-        // Sort manually by date (newest first)
         orders.sort((a, b) => {
           const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
           const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
