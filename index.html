@@ -42,8 +42,10 @@
   .toggle-password { 
     position: absolute; right: 15px; top: 50%; 
     transform: translateY(-50%); cursor: pointer; 
-    font-size: 18px; opacity: 0.6; 
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.6; transition: opacity 0.2s;
   }
+  .toggle-password:hover { opacity: 1; }
 
   .auth-btn { background: var(--primary); color: white; padding: 16px; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: background 0.2s; }
   .auth-btn:hover { background: var(--primary-dark); }
@@ -97,24 +99,30 @@
   <div class="auth-logo">TrustLink</div>
   <div class="auth-tagline">Secure transactions for social commerce</div>
   
-  <!-- SIGN IN FORM (Now hidden by default) -->
+  <!-- SIGN IN FORM (Hidden by default) -->
   <div class="auth-form" id="loginForm" style="display: none;">
     <input type="email" id="loginEmail" placeholder="Email address">
     <div class="password-wrapper">
       <input type="password" id="loginPassword" placeholder="Password">
-      <span class="toggle-password" onclick="togglePwd('loginPassword', this)">👁️</span>
+      <!-- Clean SVG Eye -->
+      <span class="toggle-password" onclick="togglePwd('loginPassword', this)">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </span>
     </div>
     <button class="auth-btn" onclick="handleLogin()">Sign In</button>
     <div class="toggle-auth" onclick="toggleAuth('signup')">Don't have an account? Create one</div>
   </div>
 
-  <!-- SIGN UP FORM (Now visible by default) -->
+  <!-- SIGN UP FORM (Visible by default) -->
   <div class="auth-form" id="signupForm" style="display: flex;">
     <input type="text" id="signupName" placeholder="Business or Full Name">
     <input type="email" id="signupEmail" placeholder="Email address">
     <div class="password-wrapper">
       <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
-      <span class="toggle-password" onclick="togglePwd('signupPassword', this)">👁️</span>
+      <!-- Clean SVG Eye -->
+      <span class="toggle-password" onclick="togglePwd('signupPassword', this)">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </span>
     </div>
     <button class="auth-btn" onclick="handleSignup()">Create Account</button>
     <div class="toggle-auth" onclick="toggleAuth('login')">Already have an account? Sign In</div>
@@ -237,15 +245,17 @@
     }
   });
 
-  // --- PASSWORD EYE TOGGLE ---
-  function togglePwd(inputId, icon) {
+  // --- CLEAN SVG PASSWORD TOGGLE ---
+  function togglePwd(inputId, iconSpan) {
     const input = document.getElementById(inputId);
     if (input.type === "password") {
       input.type = "text";
-      icon.textContent = "🙈";
+      // Closed Eye (Slash)
+      iconSpan.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
     } else {
       input.type = "password";
-      icon.textContent = "👁️";
+      // Open Eye
+      iconSpan.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
     }
   }
 
@@ -308,9 +318,7 @@
         try {
           await navigator.clipboard.writeText(fullLink);
           copied = true;
-        } catch (err) {
-          console.log("Modern clipboard failed, trying fallback...");
-        }
+        } catch (err) {}
       }
       if (!copied) {
         const textArea = document.createElement("textarea");
