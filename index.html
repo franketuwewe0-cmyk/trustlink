@@ -28,8 +28,23 @@
   .auth-logo { text-align: center; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; letter-spacing: -0.5px; }
   .auth-tagline { text-align: center; font-size: 14px; color: #64748b; margin-bottom: 35px; }
   .auth-form { display: flex; flex-direction: column; max-width: 350px; margin: 0 auto; width: 100%; }
-  .auth-form input { padding: 15px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; font-size: 15px; outline: none; background: #ffffff; transition: border 0.2s; }
+  
+  .auth-form input { 
+    padding: 15px; border: 1px solid var(--border); border-radius: 8px; 
+    margin-bottom: 16px; font-size: 15px; outline: none; background: #ffffff; 
+    transition: border 0.2s; width: 100%; box-sizing: border-box;
+  }
   .auth-form input:focus { border-color: var(--primary); }
+
+  /* Password Eye Toggle */
+  .password-wrapper { position: relative; margin-bottom: 16px; width: 100%; }
+  .password-wrapper input { margin-bottom: 0 !important; padding-right: 45px; }
+  .toggle-password { 
+    position: absolute; right: 15px; top: 50%; 
+    transform: translateY(-50%); cursor: pointer; 
+    font-size: 18px; opacity: 0.6; 
+  }
+
   .auth-btn { background: var(--primary); color: white; padding: 16px; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: background 0.2s; }
   .auth-btn:hover { background: var(--primary-dark); }
   .toggle-auth { text-align: center; font-size: 14px; color: var(--primary); margin-top: 24px; cursor: pointer; font-weight: 500; }
@@ -82,17 +97,25 @@
   <div class="auth-logo">TrustLink</div>
   <div class="auth-tagline">Secure transactions for social commerce</div>
   
-  <div class="auth-form" id="loginForm">
+  <!-- SIGN IN FORM (Now hidden by default) -->
+  <div class="auth-form" id="loginForm" style="display: none;">
     <input type="email" id="loginEmail" placeholder="Email address">
-    <input type="password" id="loginPassword" placeholder="Password">
+    <div class="password-wrapper">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <span class="toggle-password" onclick="togglePwd('loginPassword', this)">👁️</span>
+    </div>
     <button class="auth-btn" onclick="handleLogin()">Sign In</button>
-    <div class="toggle-auth" onclick="toggleAuth('signup')">Create a business account</div>
+    <div class="toggle-auth" onclick="toggleAuth('signup')">Don't have an account? Create one</div>
   </div>
 
-  <div class="auth-form" id="signupForm" style="display:none;">
+  <!-- SIGN UP FORM (Now visible by default) -->
+  <div class="auth-form" id="signupForm" style="display: flex;">
     <input type="text" id="signupName" placeholder="Business or Full Name">
     <input type="email" id="signupEmail" placeholder="Email address">
-    <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
+    <div class="password-wrapper">
+      <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
+      <span class="toggle-password" onclick="togglePwd('signupPassword', this)">👁️</span>
+    </div>
     <button class="auth-btn" onclick="handleSignup()">Create Account</button>
     <div class="toggle-auth" onclick="toggleAuth('login')">Already have an account? Sign In</div>
   </div>
@@ -214,9 +237,26 @@
     }
   });
 
+  // --- PASSWORD EYE TOGGLE ---
+  function togglePwd(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      icon.textContent = "👁️";
+    }
+  }
+
   function toggleAuth(type) {
-    document.getElementById('loginForm').style.display = type === 'login' ? 'flex' : 'none';
-    document.getElementById('signupForm').style.display = type === 'signup' ? 'flex' : 'none';
+    if (type === 'login') {
+      document.getElementById('loginForm').style.display = 'flex';
+      document.getElementById('signupForm').style.display = 'none';
+    } else {
+      document.getElementById('signupForm').style.display = 'flex';
+      document.getElementById('loginForm').style.display = 'none';
+    }
   }
 
   async function handleSignup() {
