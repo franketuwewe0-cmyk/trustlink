@@ -139,7 +139,7 @@
 
   <div class="receipt-card" id="receiptCard">
     
-    <!-- SVG Checkmark (Clean, No Emojis) -->
+    <!-- SVG Checkmark -->
     <svg class="css-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
       <circle class="css-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
       <path class="css-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
@@ -201,7 +201,9 @@
       if (!currentOrderId) {
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('sellerDashboard').classList.add('active');
-        document.getElementById('welcomeText').textContent = "Welcome, " + (user.displayName || "Seller");
+        // Fallback to email prefix if display name is missing
+        const name = user.displayName || user.email.split('@')[0] || "Seller";
+        document.getElementById('welcomeText').textContent = "Welcome, " + name;
         loadSellerOrders();
       }
     } else {
@@ -226,6 +228,7 @@
     try {
       const res = await auth.createUserWithEmailAndPassword(email, pass);
       await res.user.updateProfile({ displayName: name });
+      window.location.reload(); // Reload to grab the new display name
     } catch(e) { alert(e.message); }
   }
 
@@ -246,9 +249,11 @@
     if(!item || !price) return alert("Please fill all fields");
 
     try {
+      const sellerName = currentUser.displayName || currentUser.email.split('@')[0] || "Seller";
+      
       const docRef = await db.collection('orders').add({
         sellerId: currentUser.uid,
-        sellerName: currentUser.displayName || "Seller",
+        sellerName: sellerName,
         item: item,
         price: price,
         status: 'pending',
@@ -268,9 +273,9 @@
   }
 
   function loadSellerOrders() {
+    // Removed .orderBy() to avoid Firebase Composite Index error
     db.collection('orders')
       .where('sellerId', '==', currentUser.uid)
-      .orderBy('createdAt', 'desc')
       .onSnapshot(snapshot => {
         const list = document.getElementById('ordersList');
         list.innerHTML = "";
@@ -280,8 +285,19 @@
           return;
         }
 
+        let orders = [];
         snapshot.forEach(doc => {
-          const data = doc.data();
+          orders.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Sort manually by date (newest first)
+        orders.sort((a, b) => {
+          const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+          const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+          return timeB - timeA;
+        });
+
+        orders.forEach(data => {
           const isCompleted = data.status === 'completed';
           
           list.innerHTML += `
@@ -296,6 +312,8 @@
             </div>
           `;
         });
+      }, error => {
+        console.error("Error fetching orders: ", error);
       });
   }
 
@@ -307,7 +325,7 @@
       }
       
       const data = doc.data();
-      document.getElementById('showSeller').textContent = data.sellerName;
+      document.getElementById('showSeller').textContent = data.sellerName || "Seller";
       document.getElementById('showItem').textContent = data.item;
       document.getElementById('showPrice').textContent = "₦" + parseInt(data.price).toLocaleString();
 
