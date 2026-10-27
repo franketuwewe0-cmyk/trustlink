@@ -70,8 +70,11 @@
   .order-item { border-bottom: 1px solid var(--border); padding: 16px 0; display: flex; justify-content: space-between; align-items: center; }
   .order-item:last-child { border-bottom: none; padding-bottom: 0; }
   .order-info h4 { margin: 0 0 6px 0; font-size: 15px; color: var(--text); font-weight: 600; }
-  .order-info p { margin: 0; font-size: 14px; color: #64748b; }
+  .order-info p { margin: 0 0 8px 0; font-size: 14px; color: #64748b; }
   
+  .copy-mini-btn { background: #f1f5f9; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .copy-mini-btn:hover { background: #e2e8f0; }
+
   .status-badge { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; }
   .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
   .status-completed { background: #f0fdf4; color: #15803d; border: 1px solid #86efac; }
@@ -90,6 +93,12 @@
   .receipt-price { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 24px; letter-spacing: -0.5px; }
   .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; color: #475569; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
   .receipt-details strong { color: var(--text); }
+
+  /* VIRAL LOOP CTA */
+  .viral-loop { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border); }
+  .viral-loop p { font-size: 13px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
+  .btn-outline { display: block; width: 100%; padding: 14px; background: transparent; border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; box-sizing: border-box; transition: all 0.2s; }
+  .btn-outline:hover { background: var(--primary); color: white; }
 </style>
 </head>
 <body>
@@ -99,12 +108,11 @@
   <div class="auth-logo">TrustLink</div>
   <div class="auth-tagline">Secure transactions for social commerce</div>
   
-  <!-- SIGN IN FORM (Hidden by default) -->
+  <!-- SIGN IN FORM -->
   <div class="auth-form" id="loginForm" style="display: none;">
     <input type="email" id="loginEmail" placeholder="Email address">
     <div class="password-wrapper">
       <input type="password" id="loginPassword" placeholder="Password">
-      <!-- Clean SVG Eye -->
       <span class="toggle-password" onclick="togglePwd('loginPassword', this)">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
       </span>
@@ -113,13 +121,12 @@
     <div class="toggle-auth" onclick="toggleAuth('signup')">Don't have an account? Create one</div>
   </div>
 
-  <!-- SIGN UP FORM (Visible by default) -->
+  <!-- SIGN UP FORM (Default) -->
   <div class="auth-form" id="signupForm" style="display: flex;">
     <input type="text" id="signupName" placeholder="Business or Full Name">
     <input type="email" id="signupEmail" placeholder="Email address">
     <div class="password-wrapper">
       <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
-      <!-- Clean SVG Eye -->
       <span class="toggle-password" onclick="togglePwd('signupPassword', this)">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
       </span>
@@ -170,7 +177,6 @@
 
   <div class="receipt-card" id="receiptCard">
     
-    <!-- SVG Checkmark -->
     <svg class="css-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
       <circle class="css-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
       <path class="css-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
@@ -193,18 +199,25 @@
       <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
       <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
     </div>
+
+    <!-- 🚀 THE VIRAL LOOP CTA -->
+    <div class="viral-loop">
+      <p style="font-weight: 600; color: var(--text); font-size: 14px; margin-bottom: 4px;">Do you sell online too?</p>
+      <p style="margin-bottom: 16px;">Stop buyers from claiming they didn't get their item. Create your own secure receipts.</p>
+      <a href="/" class="btn-outline">Create Free Seller Account</a>
+    </div>
   </div>
 </div>
 
 <script>
-  // YOUR FIREBASE CONFIG
+  // 🚀 YOUR NEW TRUSTLINK FIREBASE CONFIG
   const firebaseConfig = {
-    apiKey: "AIzaSyD6nF-6PRO-TZOVrsIGBxRXGeFGVKfLkmQ",
-    authDomain: "voxpop-1c6c4.firebaseapp.com",
-    projectId: "voxpop-1c6c4",
-    storageBucket: "voxpop-1c6c4.firebasestorage.app",
-    messagingSenderId: "839233642124",
-    appId: "1:839233642124:web:c7dd76816a808fc2e6e5a9"
+    apiKey: "AIzaSyDTtMb7J4GH8ARgCn2Db5fFgCF9ELxJ3x0",
+    authDomain: "trustlink-e1804.firebaseapp.com",
+    projectId: "trustlink-e1804",
+    storageBucket: "trustlink-e1804.firebasestorage.app",
+    messagingSenderId: "84260650409",
+    appId: "1:84260650409:web:c7589f482334c95826d8b8"
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
@@ -245,16 +258,13 @@
     }
   });
 
-  // --- CLEAN SVG PASSWORD TOGGLE ---
   function togglePwd(inputId, iconSpan) {
     const input = document.getElementById(inputId);
     if (input.type === "password") {
       input.type = "text";
-      // Closed Eye (Slash)
       iconSpan.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
     } else {
       input.type = "password";
-      // Open Eye
       iconSpan.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
     }
   }
@@ -312,7 +322,6 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const fullLink = baseUrl + `?order=${docRef.id}`;
 
-      // --- CLIPBOARD FIX ---
       let copied = false;
       if (navigator.clipboard && window.isSecureContext) {
         try {
@@ -345,6 +354,15 @@
     } catch(e) { alert(e.message); }
   }
 
+  async function copyLink(link) {
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Link copied to clipboard!");
+    } catch(err) {
+      prompt("Copy this link:", link);
+    }
+  }
+
   function loadSellerOrders() {
     db.collection('orders')
       .where('sellerId', '==', currentUser.uid)
@@ -370,12 +388,15 @@
 
         orders.forEach(data => {
           const isCompleted = data.status === 'completed';
+          const baseUrl = window.location.origin + window.location.pathname;
+          const fullLink = baseUrl + `?order=${data.id}`;
           
           list.innerHTML += `
             <div class="order-item">
               <div class="order-info">
                 <h4>${data.item}</h4>
                 <p>₦${parseInt(data.price).toLocaleString()}</p>
+                <button class="copy-mini-btn" onclick="copyLink('${fullLink}')">Copy Link</button>
               </div>
               <div class="status-badge ${isCompleted ? 'status-completed' : 'status-pending'}">
                 ${isCompleted ? 'Completed' : 'Pending'}
