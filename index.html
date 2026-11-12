@@ -14,6 +14,7 @@
     --bg: #f8fafc; 
     --text: #0f172a; 
     --border: #e2e8f0;
+    --wa-green: #25D366;
   }
   body { 
     margin: 0; padding: 0; background-color: var(--bg); 
@@ -22,93 +23,113 @@
   }
   .app-container { width: 100%; max-width: 420px; padding: 20px; box-sizing: border-box; }
   
+  /* LANDING PAGE (Quick Create) */
+  .landing-header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+  .landing-header h1 { color: var(--primary); font-size: 32px; margin: 0 0 10px 0; }
+  .landing-header p { color: #64748b; font-size: 15px; margin: 0; line-height: 1.5; }
+  
+  .quick-create-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 2px solid var(--primary); margin-bottom: 24px; }
+  .quick-create-card h3 { margin: 0 0 15px 0; font-size: 18px; color: var(--text); }
+
   /* AUTH SCREENS */
   .auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; justify-content: center; padding: 30px; box-sizing: border-box; }
   .auth-screen.hidden { display: none; }
-  .auth-logo { text-align: center; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; letter-spacing: -0.5px; }
+  .auth-logo { text-align: center; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
   .auth-tagline { text-align: center; font-size: 14px; color: #64748b; margin-bottom: 35px; }
   .auth-form { display: flex; flex-direction: column; max-width: 350px; margin: 0 auto; width: 100%; }
-  
-  .auth-form input { 
-    padding: 15px; border: 1px solid var(--border); border-radius: 8px; 
-    margin-bottom: 16px; font-size: 15px; outline: none; background: #ffffff; 
-    transition: border 0.2s; width: 100%; box-sizing: border-box;
-  }
+  .auth-form input { padding: 15px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; font-size: 15px; outline: none; width: 100%; box-sizing: border-box; }
   .auth-form input:focus { border-color: var(--primary); }
-
-  /* Password Eye Toggle */
   .password-wrapper { position: relative; margin-bottom: 16px; width: 100%; }
   .password-wrapper input { margin-bottom: 0 !important; padding-right: 45px; }
-  .toggle-password { 
-    position: absolute; right: 15px; top: 50%; 
-    transform: translateY(-50%); cursor: pointer; 
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.6; transition: opacity 0.2s;
-  }
-  .toggle-password:hover { opacity: 1; }
-
-  .auth-btn { background: var(--primary); color: white; padding: 16px; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: background 0.2s; }
-  .auth-btn:hover { background: var(--primary-dark); }
+  .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.6; }
+  .auth-btn { background: var(--primary); color: white; padding: 16px; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; }
   .toggle-auth { text-align: center; font-size: 14px; color: var(--primary); margin-top: 24px; cursor: pointer; font-weight: 500; }
 
   /* MAIN APP */
   .app-screen { display: none; width: 100%; }
   .app-screen.active { display: block; }
   .header { text-align: center; margin-bottom: 24px; margin-top: 20px; }
-  .header h1 { color: var(--text); margin: 0 0 6px 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+  .header h1 { color: var(--text); margin: 0 0 6px 0; font-size: 24px; font-weight: 700; }
   .header p { color: #64748b; font-size: 14px; margin: 0; }
   .logout-btn { background: none; border: none; color: #ef4444; font-weight: 600; font-size: 14px; cursor: pointer; position: absolute; top: 24px; right: 24px; }
 
-  .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 24px; }
+  .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 24px; }
   .form-group { margin-bottom: 20px; }
   .form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-  .form-group input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; background: #ffffff; transition: border 0.2s; }
+  .form-group input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; }
   .form-group input:focus { border-color: var(--primary); }
-  .btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; display: block; box-sizing: border-box; transition: background 0.2s; }
+  
+  .btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-align: center; display: block; box-sizing: border-box; }
   .btn:hover { background: var(--primary-dark); }
+  .btn-wa { background: var(--wa-green); color: white; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-wa:hover { background: #128C7E; }
   
   .order-item { border-bottom: 1px solid var(--border); padding: 16px 0; display: flex; justify-content: space-between; align-items: center; }
-  .order-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .order-info h4 { margin: 0 0 6px 0; font-size: 15px; color: var(--text); font-weight: 600; }
+  .order-info h4 { margin: 0 0 6px 0; font-size: 15px; }
   .order-info p { margin: 0 0 8px 0; font-size: 14px; color: #64748b; }
+  .copy-mini-btn { background: #f1f5f9; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
   
-  .copy-mini-btn { background: #f1f5f9; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-  .copy-mini-btn:hover { background: #e2e8f0; }
-
   .status-badge { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; }
   .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
   .status-completed { background: #f0fdf4; color: #15803d; border: 1px solid #86efac; }
 
   /* BUYER RECEIPT SCREEN */
-  .receipt-card { border: 1px solid var(--border); border-radius: 12px; padding: 32px 24px; text-align: center; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-  
-  /* Clean CSS Checkmark */
-  .css-checkmark { width: 56px; height: 56px; border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; stroke-miterlimit: 10; margin: 0 auto 20px auto; box-shadow: inset 0px 0px 0px var(--primary); }
-  .css-checkmark-circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: var(--primary); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+  .receipt-card { border: 1px solid var(--border); border-radius: 12px; padding: 32px 24px; text-align: center; background: white; }
+  .css-checkmark { width: 56px; height: 56px; border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; margin: 0 auto 20px auto; box-shadow: inset 0px 0px 0px var(--primary); }
+  .css-checkmark-circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke: var(--primary); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
   .css-checkmark-check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
   @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+  .receipt-status { font-weight: 700; font-size: 20px; margin-bottom: 8px; }
+  .receipt-item { font-size: 18px; color: #475569; margin: 8px 0; }
+  .receipt-price { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
+  .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
 
-  .receipt-status { color: var(--text); font-weight: 700; font-size: 20px; margin-bottom: 8px; }
-  .receipt-item { font-size: 18px; font-weight: 500; color: #475569; margin: 8px 0; }
-  .receipt-price { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 24px; letter-spacing: -0.5px; }
-  .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; color: #475569; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
-  .receipt-details strong { color: var(--text); }
-
-  /* VIRAL LOOP CTA */
+  /* VIRAL LOOP & MODALS */
   .viral-loop { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border); }
-  .viral-loop p { font-size: 13px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
-  .btn-outline { display: block; width: 100%; padding: 14px; background: transparent; border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; box-sizing: border-box; transition: all 0.2s; }
-  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-outline { display: block; width: 100%; padding: 14px; background: transparent; border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; box-sizing: border-box; }
+  
+  /* Success Modal for Quick Create */
+  .success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+  .success-modal.open { display: flex; }
+  .success-box { background: white; width: 100%; max-width: 400px; border-radius: 16px; padding: 25px; text-align: center; }
+  .link-box { background: #f1f5f9; border: 1px solid var(--border); padding: 12px; border-radius: 8px; word-break: break-all; font-size: 13px; margin: 15px 0; color: #475569; }
 </style>
 </head>
 <body>
 
+<!-- ================= LANDING PAGE (Not Logged In) ================= -->
+<div class="app-screen active" id="landingScreen">
+  <div class="app-container">
+    <div class="landing-header">
+      <h1>TrustLink</h1>
+      <p>Generate a secure delivery receipt in 5 seconds.<br>No account needed to try it.</p>
+    </div>
+
+    <div class="quick-create-card">
+      <h3>Create a Test Link</h3>
+      <div class="form-group">
+        <label>Item Description</label>
+        <input type="text" id="guestItem" placeholder="e.g. Nike Sneakers">
+      </div>
+      <div class="form-group">
+        <label>Price (NGN)</label>
+        <input type="number" id="guestPrice" placeholder="e.g. 50000">
+      </div>
+      <button class="btn" onclick="createGuestLink()">Generate Secure Link</button>
+    </div>
+
+    <p style="text-align: center; font-size: 14px; color: #64748b;">
+      Want to save your history? <br>
+      <span style="color: var(--primary); font-weight: bold; cursor: pointer;" onclick="showAuth()">Create a free account</span>
+    </p>
+  </div>
+</div>
+
 <!-- ================= AUTH SCREEN ================= -->
-<div class="auth-screen" id="authScreen">
+<div class="auth-screen hidden" id="authScreen">
   <div class="auth-logo">TrustLink</div>
   <div class="auth-tagline">Secure transactions for social commerce</div>
   
-  <!-- SIGN IN FORM -->
   <div class="auth-form" id="loginForm" style="display: none;">
     <input type="email" id="loginEmail" placeholder="Email address">
     <div class="password-wrapper">
@@ -121,7 +142,6 @@
     <div class="toggle-auth" onclick="toggleAuth('signup')">Don't have an account? Create one</div>
   </div>
 
-  <!-- SIGN UP FORM (Default) -->
   <div class="auth-form" id="signupForm" style="display: flex;">
     <input type="text" id="signupName" placeholder="Business or Full Name">
     <input type="email" id="signupEmail" placeholder="Email address">
@@ -138,79 +158,99 @@
 
 <!-- ================= SELLER DASHBOARD ================= -->
 <div class="app-screen" id="sellerDashboard">
-  <button class="logout-btn" onclick="logout()">Sign Out</button>
-  
-  <div class="header" style="margin-top: 40px;">
-    <h1>Dashboard</h1>
-    <p id="welcomeText">Manage your secure links</p>
-  </div>
-
-  <!-- CREATE ORDER FORM -->
-  <div class="card">
-    <h3 style="margin-top:0; font-size:16px; font-weight:600; margin-bottom: 20px;">Generate New Link</h3>
-    <div class="form-group">
-      <label>Item Description</label>
-      <input type="text" id="itemName" placeholder="e.g. iPhone 13 Pro">
+  <div class="app-container">
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+    
+    <div class="header" style="margin-top: 40px;">
+      <h1>Dashboard</h1>
+      <p id="welcomeText">Manage your secure links</p>
     </div>
-    <div class="form-group">
-      <label>Price (NGN)</label>
-      <input type="number" id="itemPrice" placeholder="e.g. 350000">
-    </div>
-    <button class="btn" onclick="createOrder()">Generate Secure Link</button>
-  </div>
 
-  <!-- ORDER HISTORY -->
-  <div class="card">
-    <h3 style="margin-top:0; font-size:16px; font-weight:600; margin-bottom: 20px;">Recent Transactions</h3>
-    <div id="ordersList">
-      <p style="font-size:14px; color:#64748b; text-align:center;">Loading transactions...</p>
+    <div class="card">
+      <h3 style="margin-top:0; font-size:16px; margin-bottom: 20px;">Generate New Link</h3>
+      <div class="form-group">
+        <label>Item Description</label>
+        <input type="text" id="itemName" placeholder="e.g. iPhone 13 Pro">
+      </div>
+      <div class="form-group">
+        <label>Price (NGN)</label>
+        <input type="number" id="itemPrice" placeholder="e.g. 350000">
+      </div>
+      <button class="btn" onclick="createOrder()">Generate Secure Link</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0; font-size:16px; margin-bottom: 20px;">Recent Transactions</h3>
+      <div id="ordersList">
+        <p style="font-size:14px; color:#64748b; text-align:center;">Loading transactions...</p>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ================= BUYER RECEIPT VIEW ================= -->
 <div class="app-screen" id="buyerView">
-  <div class="header" style="margin-top: 40px;">
-    <h1>Order Details</h1>
-    <p>Powered by TrustLink</p>
-  </div>
-
-  <div class="receipt-card" id="receiptCard">
-    
-    <svg class="css-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-      <circle class="css-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-      <path class="css-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-    </svg>
-
-    <div class="receipt-status" id="receiptStatus">Awaiting Confirmation</div>
-    <div class="receipt-item" id="showItem">-</div>
-    <div class="receipt-price" id="showPrice">₦0</div>
-    
-    <div class="receipt-details">
-      <strong>Seller:</strong> <span id="showSeller">-</span><br><br>
-      <span id="statusText">By clicking "Confirm Delivery", you state that you have received this item in the condition agreed upon.</span>
+  <div class="app-container">
+    <div class="header" style="margin-top: 40px;">
+      <h1>Order Details</h1>
+      <p>Powered by TrustLink</p>
     </div>
 
-    <div id="buyerActions">
-      <button class="btn" onclick="confirmDelivery()">Confirm Delivery</button>
-    </div>
+    <div class="receipt-card">
+      <svg class="css-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="css-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="css-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
 
-    <div id="successMessage" style="display: none;">
-      <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
-      <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
-    </div>
+      <div class="receipt-status" id="receiptStatus">Awaiting Confirmation</div>
+      <div class="receipt-item" id="showItem">-</div>
+      <div class="receipt-price" id="showPrice">₦0</div>
+      
+      <div class="receipt-details">
+        <strong>Seller:</strong> <span id="showSeller">-</span><br><br>
+        <span id="statusText">By clicking "Confirm Delivery", you state that you have received this item in the condition agreed upon.</span>
+      </div>
 
-    <!-- 🚀 THE VIRAL LOOP CTA -->
-    <div class="viral-loop">
-      <p style="font-weight: 600; color: var(--text); font-size: 14px; margin-bottom: 4px;">Do you sell online too?</p>
-      <p style="margin-bottom: 16px;">Stop buyers from claiming they didn't get their item. Create your own secure receipts.</p>
-      <a href="/" class="btn-outline">Create Free Seller Account</a>
+      <div id="buyerActions">
+        <button class="btn" onclick="confirmDelivery()">Confirm Delivery</button>
+      </div>
+
+      <div id="successMessage" style="display: none;">
+        <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
+        <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
+      </div>
+
+      <div class="viral-loop">
+        <p style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Do you sell online too?</p>
+        <p style="margin-bottom: 16px;">Stop buyers from claiming they didn't get their item. Create your own secure receipts.</p>
+        <a href="/" class="btn-outline">Create Free Seller Account</a>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ================= SUCCESS MODAL (For Guest Links) ================= -->
+<div class="success-modal" id="successModal">
+  <div class="success-box">
+    <h2 style="color: var(--primary); margin-top: 0;">Link Generated!</h2>
+    <p style="font-size: 14px; color: #64748b;">Send this link to your buyer. When they receive the item, they click confirm.</p>
+    
+    <div class="link-box" id="generatedLink">https://...</div>
+    
+    <button class="btn btn-wa" onclick="shareWhatsApp()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Send on WhatsApp
+    </button>
+    
+    <p style="margin-top: 20px; font-size: 13px; color: #ef4444; cursor: pointer; font-weight: bold;" onclick="showAuth()">
+      Sign up to save this link to your dashboard
+    </p>
+    
+    <button style="background:none; border:none; color:#64748b; margin-top: 15px; cursor:pointer; text-decoration: underline;" onclick="closeSuccessModal()">Close</button>
+  </div>
+</div>
+
 <script>
-  // 🚀 YOUR NEW TRUSTLINK FIREBASE CONFIG
   const firebaseConfig = {
     apiKey: "AIzaSyDTtMb7J4GH8ARgCn2Db5fFgCF9ELxJ3x0",
     authDomain: "trustlink-e1804.firebaseapp.com",
@@ -225,6 +265,7 @@
 
   let currentUser = null;
   let currentOrderId = null;
+  let tempGuestLink = ""; 
 
   window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -232,8 +273,7 @@
     
     if (orderId) {
       currentOrderId = orderId;
-      document.getElementById('authScreen').classList.add('hidden');
-      document.getElementById('sellerDashboard').classList.remove('active');
+      document.getElementById('landingScreen').classList.remove('active');
       document.getElementById('buyerView').classList.add('active');
       loadBuyerOrder(orderId);
     }
@@ -243,20 +283,26 @@
     if (user) {
       currentUser = user;
       if (!currentOrderId) {
+        document.getElementById('landingScreen').classList.remove('active');
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('sellerDashboard').classList.add('active');
         const name = user.displayName || user.email.split('@')[0] || "Seller";
         document.getElementById('welcomeText').textContent = "Welcome, " + name;
         loadSellerOrders();
+        claimGuestOrder(); // If they made a guest link, save it
       }
     } else {
       currentUser = null;
       if (!currentOrderId) {
-        document.getElementById('authScreen').classList.remove('hidden');
         document.getElementById('sellerDashboard').classList.remove('active');
+        document.getElementById('landingScreen').classList.add('active');
       }
     }
   });
+
+  function showAuth() {
+    document.getElementById('authScreen').classList.remove('hidden');
+  }
 
   function togglePwd(inputId, iconSpan) {
     const input = document.getElementById(inputId);
@@ -270,13 +316,8 @@
   }
 
   function toggleAuth(type) {
-    if (type === 'login') {
-      document.getElementById('loginForm').style.display = 'flex';
-      document.getElementById('signupForm').style.display = 'none';
-    } else {
-      document.getElementById('signupForm').style.display = 'flex';
-      document.getElementById('loginForm').style.display = 'none';
-    }
+    document.getElementById('loginForm').style.display = type === 'login' ? 'flex' : 'none';
+    document.getElementById('signupForm').style.display = type === 'signup' ? 'flex' : 'none';
   }
 
   async function handleSignup() {
@@ -302,6 +343,62 @@
 
   function logout() { auth.signOut(); }
 
+  // --- GUEST FEATURE (No Login) ---
+  async function createGuestLink() {
+    const item = document.getElementById('guestItem').value.trim();
+    const price = document.getElementById('guestPrice').value.trim();
+    if(!item || !price) return alert("Please fill all fields");
+
+    try {
+      // Save as a guest order
+      const docRef = await db.collection('orders').add({
+        sellerId: 'guest',
+        sellerName: 'Vendor (Guest)',
+        item: item,
+        price: price,
+        status: 'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      const baseUrl = window.location.origin + window.location.pathname;
+      tempGuestLink = baseUrl + `?order=${docRef.id}`;
+      
+      // Save to local storage so they can claim it if they sign up
+      localStorage.setItem('guestOrderId', docRef.id);
+
+      // Show the success modal
+      document.getElementById('generatedLink').textContent = tempGuestLink;
+      document.getElementById('successModal').classList.add('open');
+      
+    } catch(e) { alert(e.message); }
+  }
+
+  function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('open');
+  }
+
+  function shareWhatsApp() {
+    const text = encodeURIComponent("Hey! Here is the secure receipt for your item. Please click this link when you receive it to confirm delivery: " + tempGuestLink);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  }
+
+  // --- CLAIM GUEST ORDER (If they sign up) ---
+  async function claimGuestOrder() {
+    const guestOrderId = localStorage.getItem('guestOrderId');
+    if (guestOrderId && currentUser) {
+      try {
+        // Update the order to belong to the new user
+        await db.collection('orders').doc(guestOrderId).update({
+          sellerId: currentUser.uid,
+          sellerName: currentUser.displayName || currentUser.email.split('@')[0]
+        });
+        localStorage.removeItem('guestOrderId');
+        alert("We saved your previous test link to your dashboard!");
+      } catch(e) { console.log("Claim error:", e); }
+    }
+  }
+
+  // --- DASHBOARD FEATURES (Logged In) ---
   async function createOrder() {
     const item = document.getElementById('itemName').value.trim();
     const price = document.getElementById('itemPrice').value.trim();
@@ -322,45 +419,15 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const fullLink = baseUrl + `?order=${docRef.id}`;
 
-      let copied = false;
-      if (navigator.clipboard && window.isSecureContext) {
-        try {
-          await navigator.clipboard.writeText(fullLink);
-          copied = true;
-        } catch (err) {}
-      }
-      if (!copied) {
-        const textArea = document.createElement("textarea");
-        textArea.value = fullLink;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        textArea.style.top = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try { copied = document.execCommand('copy'); } catch (err) {}
-        document.body.removeChild(textArea);
-      }
-      
-      if (copied) {
-        alert("Link generated and copied. Send it to your buyer:\n\n" + fullLink);
-      } else {
-        prompt("Could not auto-copy. Please copy this link manually:", fullLink);
-      }
+      // Show success modal with WA button
+      tempGuestLink = fullLink;
+      document.getElementById('generatedLink').textContent = fullLink;
+      document.getElementById('successModal').classList.add('open');
       
       document.getElementById('itemName').value = "";
       document.getElementById('itemPrice').value = "";
       
     } catch(e) { alert(e.message); }
-  }
-
-  async function copyLink(link) {
-    try {
-      await navigator.clipboard.writeText(link);
-      alert("Link copied to clipboard!");
-    } catch(err) {
-      prompt("Copy this link:", link);
-    }
   }
 
   function loadSellerOrders() {
@@ -404,17 +471,20 @@
             </div>
           `;
         });
-      }, error => {
-        console.error("Error fetching orders: ", error);
       });
+  }
+
+  async function copyLink(link) {
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Link copied to clipboard!");
+    } catch(err) { prompt("Copy this link:", link); }
   }
 
   async function loadBuyerOrder(orderId) {
     try {
       const doc = await db.collection('orders').doc(orderId).get();
-      if (!doc.exists) {
-        alert("Order not found"); return;
-      }
+      if (!doc.exists) { alert("Order not found"); return; }
       
       const data = doc.data();
       document.getElementById('showSeller').textContent = data.sellerName || "Seller";
@@ -434,7 +504,6 @@
     if(!currentOrderId) return;
     try {
       await db.collection('orders').doc(currentOrderId).update({ status: 'completed' });
-      
       document.getElementById('buyerActions').style.display = 'none';
       document.getElementById('successMessage').style.display = 'block';
       document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
