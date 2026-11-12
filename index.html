@@ -16,20 +16,15 @@
     --border: #e2e8f0;
     --wa-green: #25D366;
   }
-  body { 
-    margin: 0; padding: 0; background-color: var(--bg); 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    color: var(--text); display: flex; justify-content: center; min-height: 100vh; 
-  }
+  body { margin: 0; padding: 0; background-color: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); display: flex; justify-content: center; min-height: 100vh; }
   .app-container { width: 100%; max-width: 420px; padding: 20px; box-sizing: border-box; }
   
-  /* LANDING PAGE (Quick Create) */
+  /* LANDING PAGE */
   .landing-header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
   .landing-header h1 { color: var(--primary); font-size: 32px; margin: 0 0 10px 0; }
   .landing-header p { color: #64748b; font-size: 15px; margin: 0; line-height: 1.5; }
-  
   .quick-create-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 2px solid var(--primary); margin-bottom: 24px; }
-  .quick-create-card h3 { margin: 0 0 15px 0; font-size: 18px; color: var(--text); }
+  .quick-create-card h3 { margin: 0 0 15px 0; font-size: 18px; }
 
   /* AUTH SCREENS */
   .auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; justify-content: center; padding: 30px; box-sizing: border-box; }
@@ -49,7 +44,7 @@
   .app-screen { display: none; width: 100%; }
   .app-screen.active { display: block; }
   .header { text-align: center; margin-bottom: 24px; margin-top: 20px; }
-  .header h1 { color: var(--text); margin: 0 0 6px 0; font-size: 24px; font-weight: 700; }
+  .header h1 { margin: 0 0 6px 0; font-size: 24px; font-weight: 700; }
   .header p { color: #64748b; font-size: 14px; margin: 0; }
   .logout-btn { background: none; border: none; color: #ef4444; font-weight: 600; font-size: 14px; cursor: pointer; position: absolute; top: 24px; right: 24px; }
 
@@ -67,7 +62,7 @@
   .order-item { border-bottom: 1px solid var(--border); padding: 16px 0; display: flex; justify-content: space-between; align-items: center; }
   .order-info h4 { margin: 0 0 6px 0; font-size: 15px; }
   .order-info p { margin: 0 0 8px 0; font-size: 14px; color: #64748b; }
-  .copy-mini-btn { background: #f1f5f9; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .copy-mini-btn { background: #f1f5f9; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-right: 5px; }
   
   .status-badge { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; }
   .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
@@ -84,11 +79,16 @@
   .receipt-price { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
   .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
 
+  /* RIDER PIN SECTION */
+  .pin-section { background: #fffbeb; border: 2px dashed #fcd34d; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+  .pin-label { font-size: 13px; font-weight: 600; color: #b45309; margin-bottom: 5px; }
+  .pin-display { font-size: 32px; font-weight: 800; color: #b45309; letter-spacing: 5px; margin-bottom: 15px; }
+  .pin-input { width: 100%; padding: 15px; text-align: center; font-size: 20px; letter-spacing: 5px; border: 2px solid #fcd34d; border-radius: 8px; outline: none; margin-bottom: 10px; box-sizing: border-box; }
+
   /* VIRAL LOOP & MODALS */
   .viral-loop { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border); }
   .btn-outline { display: block; width: 100%; padding: 14px; background: transparent; border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; box-sizing: border-box; }
   
-  /* Success Modal for Quick Create */
   .success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
   .success-modal.open { display: flex; }
   .success-box { background: white; width: 100%; max-width: 400px; border-radius: 16px; padding: 25px; text-align: center; }
@@ -208,16 +208,24 @@
       
       <div class="receipt-details">
         <strong>Seller:</strong> <span id="showSeller">-</span><br><br>
-        <span id="statusText">By clicking "Confirm Delivery", you state that you have received this item in the condition agreed upon.</span>
+        <span id="statusText">Please show the PIN below to the dispatch rider. They will enter it to confirm delivery.</span>
       </div>
 
-      <div id="buyerActions">
+      <!-- RIDER PIN SECTION -->
+      <div class="pin-section" id="pinSection">
+        <div class="pin-label">Your Secret Delivery PIN</div>
+        <div class="pin-display" id="displayPin">----</div>
+        <input type="number" id="inputPin" class="pin-input" placeholder="Enter PIN">
+        <button class="btn" onclick="verifyPin()">Verify & Confirm</button>
+      </div>
+
+      <div id="buyerActions" style="display: none;">
         <button class="btn" onclick="confirmDelivery()">Confirm Delivery</button>
       </div>
 
       <div id="successMessage" style="display: none;">
         <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
-        <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
+        <p style="font-size: 14px; color: #64748b;">PIN Verified. You have confirmed receipt.</p>
       </div>
 
       <div class="viral-loop">
@@ -233,7 +241,7 @@
 <div class="success-modal" id="successModal">
   <div class="success-box">
     <h2 style="color: var(--primary); margin-top: 0;">Link Generated!</h2>
-    <p style="font-size: 14px; color: #64748b;">Send this link to your buyer. When they receive the item, they click confirm.</p>
+    <p style="font-size: 14px; color: #64748b;">Send this link to your buyer. When they receive the item, they enter the secret PIN to confirm.</p>
     
     <div class="link-box" id="generatedLink">https://...</div>
     
@@ -266,6 +274,12 @@
   let currentUser = null;
   let currentOrderId = null;
   let tempGuestLink = ""; 
+  let currentOrderPin = ""; // Variable to hold the actual PIN for verification
+
+  // Function to generate a random 4-digit PIN
+  function generatePIN() {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
 
   window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -289,7 +303,7 @@
         const name = user.displayName || user.email.split('@')[0] || "Seller";
         document.getElementById('welcomeText').textContent = "Welcome, " + name;
         loadSellerOrders();
-        claimGuestOrder(); // If they made a guest link, save it
+        claimGuestOrder();
       }
     } else {
       currentUser = null;
@@ -343,30 +357,29 @@
 
   function logout() { auth.signOut(); }
 
-  // --- GUEST FEATURE (No Login) ---
+  // --- GUEST FEATURE ---
   async function createGuestLink() {
     const item = document.getElementById('guestItem').value.trim();
     const price = document.getElementById('guestPrice').value.trim();
     if(!item || !price) return alert("Please fill all fields");
 
+    const pin = generatePIN(); // Generate PIN
+
     try {
-      // Save as a guest order
       const docRef = await db.collection('orders').add({
         sellerId: 'guest',
         sellerName: 'Vendor (Guest)',
         item: item,
         price: price,
+        riderPin: pin, // Save PIN to DB
         status: 'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
       const baseUrl = window.location.origin + window.location.pathname;
       tempGuestLink = baseUrl + `?order=${docRef.id}`;
-      
-      // Save to local storage so they can claim it if they sign up
       localStorage.setItem('guestOrderId', docRef.id);
 
-      // Show the success modal
       document.getElementById('generatedLink').textContent = tempGuestLink;
       document.getElementById('successModal').classList.add('open');
       
@@ -378,16 +391,14 @@
   }
 
   function shareWhatsApp() {
-    const text = encodeURIComponent("Hey! Here is the secure receipt for your item. Please click this link when you receive it to confirm delivery: " + tempGuestLink);
+    const text = encodeURIComponent("Hey! Here is the secure receipt for your item. Please give the rider your 4-digit PIN when they arrive, and they will enter it on this link to confirm delivery: " + tempGuestLink);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   }
 
-  // --- CLAIM GUEST ORDER (If they sign up) ---
   async function claimGuestOrder() {
     const guestOrderId = localStorage.getItem('guestOrderId');
     if (guestOrderId && currentUser) {
       try {
-        // Update the order to belong to the new user
         await db.collection('orders').doc(guestOrderId).update({
           sellerId: currentUser.uid,
           sellerName: currentUser.displayName || currentUser.email.split('@')[0]
@@ -398,11 +409,13 @@
     }
   }
 
-  // --- DASHBOARD FEATURES (Logged In) ---
+  // --- DASHBOARD FEATURES ---
   async function createOrder() {
     const item = document.getElementById('itemName').value.trim();
     const price = document.getElementById('itemPrice').value.trim();
     if(!item || !price) return alert("Please fill all fields");
+
+    const pin = generatePIN(); // Generate PIN
 
     try {
       const sellerName = currentUser.displayName || currentUser.email.split('@')[0] || "Seller";
@@ -412,6 +425,7 @@
         sellerName: sellerName,
         item: item,
         price: price,
+        riderPin: pin, // Save PIN to DB
         status: 'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -419,7 +433,6 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const fullLink = baseUrl + `?order=${docRef.id}`;
 
-      // Show success modal with WA button
       tempGuestLink = fullLink;
       document.getElementById('generatedLink').textContent = fullLink;
       document.getElementById('successModal').classList.add('open');
@@ -458,11 +471,14 @@
           const baseUrl = window.location.origin + window.location.pathname;
           const fullLink = baseUrl + `?order=${data.id}`;
           
+          // Show the PIN on the seller dashboard so they know it
+          const pinDisplay = data.riderPin ? ` | PIN: <strong>${data.riderPin}</strong>` : '';
+
           list.innerHTML += `
             <div class="order-item">
               <div class="order-info">
                 <h4>${data.item}</h4>
-                <p>₦${parseInt(data.price).toLocaleString()}</p>
+                <p>₦${parseInt(data.price).toLocaleString()} ${pinDisplay}</p>
                 <button class="copy-mini-btn" onclick="copyLink('${fullLink}')">Copy Link</button>
               </div>
               <div class="status-badge ${isCompleted ? 'status-completed' : 'status-pending'}">
@@ -492,22 +508,38 @@
       document.getElementById('showPrice').textContent = "₦" + parseInt(data.price).toLocaleString();
 
       if (data.status === 'completed') {
-        document.getElementById('buyerActions').style.display = 'none';
+        document.getElementById('pinSection').style.display = 'none';
         document.getElementById('successMessage').style.display = 'block';
         document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
         document.getElementById('statusText').textContent = "Transaction completed successfully.";
+      } else {
+        // Display the PIN for the buyer to see
+        currentOrderPin = data.riderPin;
+        document.getElementById('displayPin').textContent = data.riderPin;
       }
     } catch(e) { alert(e.message); }
+  }
+
+  // --- VERIFY PIN LOGIC ---
+  function verifyPin() {
+    const enteredPin = document.getElementById('inputPin').value;
+    
+    if (enteredPin === currentOrderPin) {
+      // PIN is correct, proceed to confirm delivery
+      document.getElementById('pinSection').style.display = 'none';
+      confirmDelivery();
+    } else {
+      alert("Incorrect PIN. Please check with the buyer.");
+    }
   }
 
   async function confirmDelivery() {
     if(!currentOrderId) return;
     try {
       await db.collection('orders').doc(currentOrderId).update({ status: 'completed' });
-      document.getElementById('buyerActions').style.display = 'none';
       document.getElementById('successMessage').style.display = 'block';
       document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
-      document.getElementById('statusText').textContent = "Transaction completed successfully.";
+      document.getElementById('statusText').textContent = "PIN Verified. Transaction completed successfully.";
     } catch(e) { alert(e.message); }
   }
 </script>
