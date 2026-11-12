@@ -56,9 +56,14 @@
   .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 24px; }
   .form-group { margin-bottom: 20px; }
   .form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-  .form-group input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; }
+  .form-group input[type="text"], .form-group input[type="number"] { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; }
   .form-group input:focus { border-color: var(--primary); }
   
+  /* 🔥 NEW: FILE INPUT STYLING */
+  .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+  .file-input-wrapper input[type="file"] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+  .file-btn { background: #f1f5f9; border: 1px dashed #cbd5e1; color: #475569; padding: 14px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; width: 100%; box-sizing: border-box; }
+
   .btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-align: center; display: block; box-sizing: border-box; }
   .btn:hover { background: var(--primary-dark); }
   .btn-wa { background: var(--wa-green); color: white; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -86,7 +91,10 @@
   .receipt-price { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
   .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
 
-  /* 🔥 NEW: DELIVERY TAG YELLOW BOX */
+  /* 🔥 NEW: ITEM PHOTO DISPLAY ON BUYER PAGE */
+  .item-photo-display { max-width: 100%; max-height: 250px; border-radius: 8px; margin-bottom: 20px; object-fit: cover; border: 1px solid var(--border); display: none; }
+
+  /* DELIVERY TAG YELLOW BOX */
   .delivery-tag-box { background: #fffbeb; border: 2px dashed #fcd34d; border-radius: 8px; padding: 20px 16px; margin-bottom: 24px; text-align: center; }
   .delivery-tag-box h4 { margin: 0 0 10px 0; color: #b45309; font-size: 16px; }
   .tag-code { font-size: 36px; font-weight: 800; color: #b45309; letter-spacing: 6px; font-family: monospace; margin-bottom: 8px; }
@@ -124,6 +132,13 @@
       <div class="form-group">
         <label>Price (NGN)</label>
         <input type="number" id="guestPrice" placeholder="e.g. 50000">
+      </div>
+      <div class="form-group">
+        <label>Item Photo (Optional)</label>
+        <div class="file-input-wrapper">
+          <div class="file-btn" id="guestPhotoLabel">📸 Tap to Add Photo</div>
+          <input type="file" id="guestPhoto" accept="image/*" onchange="document.getElementById('guestPhotoLabel').textContent = '✅ Photo Selected';">
+        </div>
       </div>
       <button class="btn" onclick="createGuestLink()">Generate Secure Link</button>
     </div>
@@ -166,13 +181,13 @@
   </div>
 </div>
 
-<!-- ================= SELLER DASHBOARD ================= -->
+<!-- ================= VENDOR DASHBOARD ================= -->
 <div class="app-screen" id="sellerDashboard">
   <div class="app-container">
     <button class="logout-btn" onclick="logout()">Sign Out</button>
     
     <div class="header" style="margin-top: 40px;">
-      <h1>Dashboard</h1>
+      <h1>Vendor Dashboard</h1>
       <p id="welcomeText">Manage your secure links</p>
     </div>
 
@@ -185,6 +200,13 @@
       <div class="form-group">
         <label>Price (NGN)</label>
         <input type="number" id="itemPrice" placeholder="e.g. 350000">
+      </div>
+      <div class="form-group">
+        <label>Item Photo (Optional)</label>
+        <div class="file-input-wrapper">
+          <div class="file-btn" id="itemPhotoLabel">📸 Tap to Add Photo</div>
+          <input type="file" id="itemPhoto" accept="image/*" onchange="document.getElementById('itemPhotoLabel').textContent = '✅ Photo Selected';">
+        </div>
       </div>
       <button class="btn" onclick="createOrder()">Generate Secure Link</button>
     </div>
@@ -213,10 +235,14 @@
       </svg>
 
       <div class="receipt-status" id="receiptStatus">Awaiting Confirmation</div>
+
+      <!-- 🔥 NEW: ITEM PHOTO SHOWS HERE -->
+      <img id="showPhoto" class="item-photo-display" src="" alt="Item Photo">
+
       <div class="receipt-item" id="showItem">-</div>
       <div class="receipt-price" id="showPrice">₦0</div>
 
-      <!-- 🔥 NEW: THE YELLOW DELIVERY TAG BOX -->
+      <!-- DELIVERY TAG YELLOW BOX -->
       <div class="delivery-tag-box" id="deliveryTagBox">
         <h4>Your Secret Delivery Tag</h4>
         <div class="tag-code" id="showTag">----</div>
@@ -224,11 +250,10 @@
       </div>
       
       <div class="receipt-details">
-        <strong>Seller:</strong> <span id="showSeller">-</span><br><br>
+        <strong>Vendor:</strong> <span id="showSeller">-</span><br><br>
         <span id="statusText">Ask the rider to enter the 4-digit Delivery Tag above to complete this transaction.</span>
       </div>
 
-      <!-- 🔥 NEW: THE PIN INPUT -->
       <div id="buyerActions">
         <input type="tel" id="buyerTagInput" class="tag-input" placeholder="0000" maxlength="4">
         <button class="btn" onclick="confirmDelivery()">Verify & Complete Delivery</button>
@@ -236,13 +261,13 @@
 
       <div id="successMessage" style="display: none;">
         <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
-        <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
+        <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The vendor has been notified.</p>
       </div>
 
       <div class="viral-loop">
         <p style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Do you sell online too?</p>
         <p style="margin-bottom: 16px;">Stop buyers from claiming they didn't get their item. Create your own secure receipts.</p>
-        <a href="/" class="btn-outline">Create Free Seller Account</a>
+        <a href="/" class="btn-outline">Create Free Vendor Account</a>
       </div>
     </div>
   </div>
@@ -309,7 +334,7 @@
         document.getElementById('landingScreen').classList.remove('active');
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('sellerDashboard').classList.add('active');
-        const name = user.displayName || user.email.split('@')[0] || "Seller";
+        const name = user.displayName || user.email.split('@')[0] || "Vendor";
         document.getElementById('welcomeText').textContent = "Welcome, " + name;
         loadSellerOrders();
         claimGuestOrder();
@@ -366,21 +391,63 @@
 
   function logout() { auth.signOut(); }
 
+  // 🔥 NEW: COMPRESS THE IMAGE TO BASE64 TEXT
+  function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = event => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 400; 
+          const MAX_HEIGHT = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+          } else {
+            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          // Compress to JPEG at 60% quality
+          resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+        };
+        img.onerror = error => reject(error);
+      };
+      reader.onerror = error => reject(error);
+    });
+  }
+
   // --- GUEST FEATURE (No Login) ---
   async function createGuestLink() {
     const item = document.getElementById('guestItem').value.trim();
     const price = document.getElementById('guestPrice').value.trim();
+    const photoFile = document.getElementById('guestPhoto').files[0];
     if(!item || !price) return alert("Please fill all fields");
 
     try {
-      const deliveryTag = Math.floor(1000 + Math.random() * 9000).toString(); // 🔥 Auto-generate 4-digit tag
+      document.querySelector('.quick-create-card .btn').textContent = "Generating...";
+      const deliveryTag = Math.floor(1000 + Math.random() * 9000).toString(); 
+      let photoBase64 = null;
+
+      if (photoFile) {
+        photoBase64 = await compressImage(photoFile);
+      }
 
       const docRef = await db.collection('orders').add({
         sellerId: 'guest',
         sellerName: 'Vendor (Guest)',
         item: item,
         price: price,
-        deliveryTag: deliveryTag, // 🔥 Save to DB
+        deliveryTag: deliveryTag,
+        itemPhoto: photoBase64, // Save the Base64 text
         status: 'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -394,6 +461,7 @@
       document.getElementById('successModal').classList.add('open');
       
     } catch(e) { alert(e.message); }
+    finally { document.querySelector('.quick-create-card .btn').textContent = "Generate Secure Link"; }
   }
 
   function closeSuccessModal() {
@@ -423,18 +491,26 @@
   async function createOrder() {
     const item = document.getElementById('itemName').value.trim();
     const price = document.getElementById('itemPrice').value.trim();
+    const photoFile = document.getElementById('itemPhoto').files[0];
     if(!item || !price) return alert("Please fill all fields");
 
     try {
-      const sellerName = currentUser.displayName || currentUser.email.split('@')[0] || "Seller";
-      const deliveryTag = Math.floor(1000 + Math.random() * 9000).toString(); // 🔥 Auto-generate 4-digit tag
+      document.querySelector('.card .btn').textContent = "Generating...";
+      const sellerName = currentUser.displayName || currentUser.email.split('@')[0] || "Vendor";
+      const deliveryTag = Math.floor(1000 + Math.random() * 9000).toString(); 
+      let photoBase64 = null;
+
+      if (photoFile) {
+        photoBase64 = await compressImage(photoFile);
+      }
       
       const docRef = await db.collection('orders').add({
         sellerId: currentUser.uid,
         sellerName: sellerName,
         item: item,
         price: price,
-        deliveryTag: deliveryTag, // 🔥 Save to DB
+        deliveryTag: deliveryTag,
+        itemPhoto: photoBase64, // Save the Base64 text
         status: 'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -448,8 +524,11 @@
       
       document.getElementById('itemName').value = "";
       document.getElementById('itemPrice').value = "";
+      document.getElementById('itemPhoto').value = "";
+      document.getElementById('itemPhotoLabel').textContent = "📸 Tap to Add Photo";
       
     } catch(e) { alert(e.message); }
+    finally { document.querySelector('.card .btn').textContent = "Generate Secure Link"; }
   }
 
   function loadSellerOrders() {
@@ -510,18 +589,24 @@
       if (!doc.exists) { alert("Order not found"); return; }
       
       const data = doc.data();
-      document.getElementById('showSeller').textContent = data.sellerName || "Seller";
+      document.getElementById('showSeller').textContent = data.sellerName || "Vendor";
       document.getElementById('showItem').textContent = data.item;
       document.getElementById('showPrice').textContent = "₦" + parseInt(data.price).toLocaleString();
       
-      // 🔥 Show the yellow box with the tag
+      // 🔥 SHOW THE PHOTO IF IT EXISTS
+      if (data.itemPhoto) {
+        const imgEl = document.getElementById('showPhoto');
+        imgEl.src = data.itemPhoto;
+        imgEl.style.display = 'block';
+      }
+
       if (data.deliveryTag) {
         document.getElementById('showTag').textContent = data.deliveryTag;
       }
 
       if (data.status === 'completed') {
         document.getElementById('buyerActions').style.display = 'none';
-        document.getElementById('deliveryTagBox').style.display = 'none'; // Hide tag box if done
+        document.getElementById('deliveryTagBox').style.display = 'none'; 
         document.getElementById('successMessage').style.display = 'block';
         document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
         document.getElementById('statusText').textContent = "Transaction completed successfully.";
@@ -539,16 +624,14 @@
       const doc = await db.collection('orders').doc(currentOrderId).get();
       const data = doc.data();
 
-      // 🔥 Verify the tag matches
       if (data.deliveryTag !== enteredTag) {
         return alert("Incorrect Delivery Tag. Please check with your rider.");
       }
 
-      // If it matches, complete the order
       await db.collection('orders').doc(currentOrderId).update({ status: 'completed' });
       
       document.getElementById('buyerActions').style.display = 'none';
-      document.getElementById('deliveryTagBox').style.display = 'none'; // Hide yellow box
+      document.getElementById('deliveryTagBox').style.display = 'none'; 
       document.getElementById('successMessage').style.display = 'block';
       document.getElementById('receiptStatus').textContent = "Delivery Confirmed";
       document.getElementById('statusText').textContent = "Transaction completed successfully.";
