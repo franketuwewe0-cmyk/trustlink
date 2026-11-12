@@ -16,21 +16,9 @@
     --border: #e2e8f0;
     --wa-green: #25D366;
   }
-  body { 
-    margin: 0; padding: 0; background-color: var(--bg); 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    color: var(--text); display: flex; justify-content: center; min-height: 100vh; 
-  }
+  body { margin: 0; padding: 0; background-color: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); display: flex; justify-content: center; min-height: 100vh; }
   .app-container { width: 100%; max-width: 420px; padding: 20px; box-sizing: border-box; }
   
-  /* LANDING PAGE (Quick Create) */
-  .landing-header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
-  .landing-header h1 { color: var(--primary); font-size: 32px; margin: 0 0 10px 0; }
-  .landing-header p { color: #64748b; font-size: 15px; margin: 0; line-height: 1.5; }
-  
-  .quick-create-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 2px solid var(--primary); margin-bottom: 24px; }
-  .quick-create-card h3 { margin: 0 0 15px 0; font-size: 18px; color: var(--text); }
-
   /* AUTH SCREENS */
   .auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; justify-content: center; padding: 30px; box-sizing: border-box; }
   .auth-screen.hidden { display: none; }
@@ -49,7 +37,7 @@
   .app-screen { display: none; width: 100%; }
   .app-screen.active { display: block; }
   .header { text-align: center; margin-bottom: 24px; margin-top: 20px; }
-  .header h1 { color: var(--text); margin: 0 0 6px 0; font-size: 24px; font-weight: 700; }
+  .header h1 { margin: 0 0 6px 0; font-size: 24px; font-weight: 700; }
   .header p { color: #64748b; font-size: 14px; margin: 0; }
   .logout-btn { background: none; border: none; color: #ef4444; font-weight: 600; font-size: 14px; cursor: pointer; position: absolute; top: 24px; right: 24px; }
 
@@ -84,11 +72,11 @@
   .receipt-price { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
   .receipt-details { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: left; font-size: 14px; margin-bottom: 24px; border: 1px solid var(--border); line-height: 1.5; }
 
-  /* VIRAL LOOP & MODALS */
+  /* VIRAL LOOP */
   .viral-loop { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border); }
   .btn-outline { display: block; width: 100%; padding: 14px; background: transparent; border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; box-sizing: border-box; }
   
-  /* Success Modal for Quick Create */
+  /* 🚀 NEW: SUCCESS MODAL */
   .success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
   .success-modal.open { display: flex; }
   .success-box { background: white; width: 100%; max-width: 400px; border-radius: 16px; padding: 25px; text-align: center; }
@@ -97,36 +85,8 @@
 </head>
 <body>
 
-<!-- ================= LANDING PAGE (Not Logged In) ================= -->
-<div class="app-screen active" id="landingScreen">
-  <div class="app-container">
-    <div class="landing-header">
-      <h1>TrustLink</h1>
-      <p>Generate a secure delivery receipt in 5 seconds.<br>No account needed to try it.</p>
-    </div>
-
-    <div class="quick-create-card">
-      <h3>Create a Test Link</h3>
-      <div class="form-group">
-        <label>Item Description</label>
-        <input type="text" id="guestItem" placeholder="e.g. Nike Sneakers">
-      </div>
-      <div class="form-group">
-        <label>Price (NGN)</label>
-        <input type="number" id="guestPrice" placeholder="e.g. 50000">
-      </div>
-      <button class="btn" onclick="createGuestLink()">Generate Secure Link</button>
-    </div>
-
-    <p style="text-align: center; font-size: 14px; color: #64748b;">
-      Want to save your history? <br>
-      <span style="color: var(--primary); font-weight: bold; cursor: pointer;" onclick="showAuth()">Create a free account</span>
-    </p>
-  </div>
-</div>
-
-<!-- ================= AUTH SCREEN ================= -->
-<div class="auth-screen hidden" id="authScreen">
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="authScreen">
   <div class="auth-logo">TrustLink</div>
   <div class="auth-tagline">Secure transactions for social commerce</div>
   
@@ -149,6 +109,280 @@
       <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
       <span class="toggle-password" onclick="togglePwd('signupPassword', this)">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </span>
+    </div>
+    <button class="auth-btn" onclick="handleSignup()">Create Account</button>
+    <div class="toggle-auth" onclick="toggleAuth('login')">Already have an account? Sign In</div>
+  </div>
+</div>
+
+<!-- SELLER DASHBOARD -->
+<div class="app-screen" id="sellerDashboard">
+  <div class="app-container">
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+    
+    <div class="header" style="margin-top: 40px;">
+      <h1>Dashboard</h1>
+      <p id="welcomeText">Manage your secure links</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0; font-size:16px; margin-bottom: 20px;">Generate New Link</h3>
+      <div class="form-group">
+        <label>Item Description</label>
+        <input type="text" id="itemName" placeholder="e.g. iPhone 13 Pro">
+      </div>
+      <div class="form-group">
+        <label>Price (NGN)</label>
+        <input type="number" id="itemPrice" placeholder="e.g. 350000">
+      </div>
+      <button class="btn" onclick="createOrder()">Generate Secure Link</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0; font-size:16px; margin-bottom: 20px;">Recent Transactions</h3>
+      <div id="ordersList">
+        <p style="font-size:14px; color:#64748b; text-align:center;">Loading transactions...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUYER RECEIPT VIEW -->
+<div class="app-screen" id="buyerView">
+  <div class="app-container">
+    <div class="header" style="margin-top: 40px;">
+      <h1>Order Details</h1>
+      <p>Powered by TrustLink</p>
+    </div>
+
+    <div class="receipt-card" id="receiptCard">
+      <svg class="css-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="css-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="css-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+
+      <div class="receipt-status" id="receiptStatus">Awaiting Confirmation</div>
+      <div class="receipt-item" id="showItem">-</div>
+      <div class="receipt-price" id="showPrice">₦0</div>
+      
+      <div class="receipt-details">
+        <strong>Seller:</strong> <span id="showSeller">-</span><br><br>
+        <span id="statusText">By clicking "Confirm Delivery", you state that you have received this item in the condition agreed upon.</span>
+      </div>
+
+      <div id="buyerActions">
+        <button class="btn" onclick="confirmDelivery()">Confirm Delivery</button>
+      </div>
+
+      <div id="successMessage" style="display: none;">
+        <h3 style="color: var(--primary); margin: 10px 0 5px 0; font-size: 18px;">Transaction Complete</h3>
+        <p style="font-size: 14px; color: #64748b;">You have confirmed receipt. The seller has been notified.</p>
+      </div>
+
+      <div class="viral-loop">
+        <p style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Do you sell online too?</p>
+        <p style="margin-bottom: 16px;">Stop buyers from claiming they didn't get their item. Create your own secure receipts.</p>
+        <a href="/" class="btn-outline">Create Free Seller Account</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🚀 NEW: SUCCESS MODAL -->
+<div class="success-modal" id="successModal">
+  <div class="success-box">
+    <h2 style="color: var(--primary); margin-top: 0;">Link Generated!</h2>
+    <p style="font-size: 14px; color: #64748b;">Send this link to your buyer.</p>
+    
+    <div class="link-box" id="generatedLink">https://...</div>
+    
+    <button class="btn" style="background: #475569; margin-bottom: 10px;" onclick="copyGeneratedLink()">Copy Link</button>
+    
+    <button class="btn btn-wa" onclick="shareWhatsApp()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Send on WhatsApp
+    </button>
+    
+    <button style="background:none; border:none; color:#64748b; margin-top: 15px; cursor:pointer; text-decoration: underline;" onclick="closeSuccessModal()">Close</button>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTtMb7J4GH8ARgCn2Db5fFgCF9ELxJ3x0",
+    authDomain: "trustlink-e1804.firebaseapp.com",
+    projectId: "trustlink-e1804",
+    storageBucket: "trustlink-e1804.firebasestorage.app",
+    messagingSenderId: "84260650409",
+    appId: "1:84260650409:web:c7589f482334c95826d8b8"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let currentUser = null;
+  let currentOrderId = null;
+  let tempLink = "";
+
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order');
+    
+    if (orderId) {
+      currentOrderId = orderId;
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('sellerDashboard').classList.remove('active');
+      document.getElementById('buyerView').classList.add('active');
+      loadBuyerOrder(orderId);
+    }
+  };
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      if (!currentOrderId) {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('sellerDashboard').classList.add('active');
+        const name = user.displayName || user.email.split('@')[0] || "Seller";
+        document.getElementById('welcomeText').textContent = "Welcome, " + name;
+        loadSellerOrders();
+      }
+    } else {
+      currentUser = null;
+      if (!currentOrderId) {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('sellerDashboard').classList.remove('active');
+      }
+    }
+  });
+
+  function togglePwd(inputId, iconSpan) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+      input.type = "text";
+      iconSpan.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+    } else {
+      input.type = "password";
+      iconSpan.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    }
+  }
+
+  function toggleAuth(type) {
+    if (type === 'login') {
+      document.getElementById('loginForm').style.display = 'flex';
+      document.getElementById('signupForm').style.display = 'none';
+    } else {
+      document.getElementById('signupForm').style.display = 'flex';
+      document.getElementById('loginForm').style.display = 'none';
+    }
+  }
+
+  async function handleSignup() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const pass = document.getElementById('signupPassword').value.trim();
+    if(!name || !email || !pass) return alert("Please fill all fields");
+    try {
+      const res = await auth.createUserWithEmailAndPassword(email, pass);
+      await res.user.updateProfile({ displayName: name });
+      window.location.reload();
+    } catch(e) { alert(e.message); }
+  }
+
+  async function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value.trim();
+    if(!email || !pass) return alert("Please fill all fields");
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+    } catch(e) { alert(e.message); }
+  }
+
+  function logout() { auth.signOut(); }
+
+  async function createOrder() {
+    const item = document.getElementById('itemName').value.trim();
+    const price = document.getElementById('itemPrice').value.trim();
+    if(!item || !price) return alert("Please fill all fields");
+
+    try {
+      const sellerName = currentUser.displayName || currentUser.email.split('@')[0] || "Seller";
+      
+      const docRef = await db.collection('orders').add({
+        sellerId: currentUser.uid,
+        sellerName: sellerName,
+        item: item,
+        price: price,
+        status: 'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      // 🚀 THE FIX: Clean base URL
+      const baseUrl = window.location.origin;
+      tempLink = baseUrl + `/?order=${docRef.id}`;
+
+      // Show the new modal instead of an alert
+      document.getElementById('generatedLink').textContent = tempLink;
+      document.getElementById('successModal').classList.add('open');
+      
+      document.getElementById('itemName').value = "";
+      document.getElementById('itemPrice').value = "";
+      
+    } catch(e) { alert(e.message); }
+  }
+
+  // 🚀 NEW FUNCTIONS FOR THE MODAL
+  function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('open');
+  }
+
+  async function copyGeneratedLink() {
+    try {
+      await navigator.clipboard.writeText(tempLink);
+      alert("Link copied to clipboard!");
+    } catch(err) {
+      prompt("Copy this link manually:", tempLink);
+    }
+  }
+
+  function shareWhatsApp() {
+    const text = encodeURIComponent("Hey! Here is the secure receipt for your item. Please click this link when you receive it to confirm delivery: " + tempLink);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  }
+
+  async function copyLink(link) {
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Link copied to clipboard!");
+    } catch(err) { prompt("Copy this link:", link); }
+  }
+
+  function loadSellerOrders() {
+    db.collection('orders')
+      .where('sellerId', '==', currentUser.uid)
+      .onSnapshot(snapshot => {
+        const list = document.getElementById('ordersList');
+        list.innerHTML = "";
+        
+        if (snapshot.empty) {
+          list.innerHTML = '<p style="font-size:14px; color:#64748b; text-align:center;">No transactions yet.</p>';
+          return;
+        }
+
+        let orders = [];
+        snapshot.forEach(doc => {
+          orders.push({ id: doc.id, ...doc.data() });
+        });
+
+        orders.sort((a, b) => {
+          const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+          const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+          return timeB - timeA;
+        });
+
+        orders.forEach(data => {
+          const isCompleted = data.status === e cx="12" cy="12" r="3"></circle></svg>
       </span>
     </div>
     <button class="auth-btn" onclick="handleSignup()">Create Account</button>
